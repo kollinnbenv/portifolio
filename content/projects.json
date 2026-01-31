@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "terraform-state-guardian",
+    "title": "Terraform State Guardian",
+    "summary": "Pipeline de IaC com locking remoto, politicas e drift detection automatizado.",
+    "tags": ["terraform", "iac", "security"],
+    "repoUrl": "https://github.com/kollinnbenv/terraform-state-guardian",
+    "demoUrl": "https://example.com/terraform-state-guardian",
+    "impact": "Reduz conflitos de estado e falhas de deploy em ambientes multi-time.",
+    "featured": true
+  },
+  {
+    "slug": "kube-ops-fleet",
+    "title": "Kube Ops Fleet",
+    "summary": "Padrao de cluster multi-tenant com GitOps, politicas e bootstrap automatico.",
+    "tags": ["kubernetes", "gitops", "sre"],
+    "repoUrl": "https://github.com/kollinnbenv/kube-ops-fleet",
+    "demoUrl": "https://example.com/kube-ops-fleet",
+    "impact": "Provisionamento consistente de clusters em minutos com guardrails.",
+    "featured": true
+  },
+  {
+    "slug": "observability-control-plane",
+    "title": "Observability Control Plane",
+    "summary": "Stack de metricas, logs e tracing com foco em SLOs e custo previsivel.",
+    "tags": ["observability", "sre", "cloud"],
+    "repoUrl": "https://github.com/kollinnbenv/observability-control-plane",
+    "demoUrl": "https://example.com/observability-control-plane",
+    "impact": "Corta tempo medio de diagnostico e elimina alertas ruidosos.",
+    "featured": true
+  },
+  {
+    "slug": "postgres-ha-blueprint",
+    "title": "Postgres HA Blueprint",
+    "summary": "Arquitetura de Postgres resiliente com failover, backups e testes de restore.",
+    "tags": ["postgres", "cloud", "sre"],
+    "repoUrl": "https://github.com/kollinnbenv/postgres-ha-blueprint",
+    "demoUrl": "",
+    "impact": "Aumenta disponibilidade e reduz tempo de recuperacao em incidentes.",
+    "featured": false
+  },
+  {
+    "slug": "queue-autoscaler",
+    "title": "Queue Autoscaler",
+    "summary": "Autoscaling baseado em fila com HPA custom e previsao de carga.",
+    "tags": ["kubernetes", "autoscaling", "cloud"],
+    "repoUrl": "https://github.com/kollinnbenv/queue-autoscaler",
+    "demoUrl": "https://example.com/queue-autoscaler",
+    "impact": "Reduz custo ao ajustar pods a partir da demanda real.",
+    "featured": false
+  },
+  {
+    "slug": "gitops-release-train",
+    "title": "GitOps Release Train",
+    "summary": "Fluxo de releases com promocoes por ambiente e auditoria integrada.",
+    "tags": ["gitops", "ci-cd", "terraform"],
+    "repoUrl": "https://github.com/kollinnbenv/gitops-release-train",
+    "demoUrl": "",
+    "impact": "Diminui janelas de deploy e aumenta confianca nas mudancas.",
+    "featured": false
+  }
+]

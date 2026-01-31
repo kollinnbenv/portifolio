@@ -1,0 +1,12 @@
+#files astro.config.mjs
+#files src/pages/about.astro
+node_modules
+.DS_Store
+dist
+.env
+.vscode
+.idea
+*.log
+*.env
+*.local
+.astro/

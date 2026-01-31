@@ -1,0 +1,7 @@
+---
+const { placeholder = 'Buscar por nome ou descricao' } = Astro.props;
+---
+<label class="search">
+  <span class="sr-only">Buscar projetos</span>
+  <input type="search" data-search placeholder={placeholder} aria-label="Buscar projetos" />
+</label>

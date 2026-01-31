@@ -1,0 +1,70 @@
+---
+import '../styles/global.css';
+import ThemeToggle from '../components/ThemeToggle.astro';
+
+const { title, description } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const pageTitle = title ? `${title} | Kollinn Benvenutti` : 'Kollinn Benvenutti - DevOps / SRE / Cloud Engineer';
+const pageDescription = description || 'Portifolio focado em DevOps, SRE e Cloud, com projetos de infraestrutura moderna, observabilidade e automacao.';
+const siteUrl = Astro.site ? Astro.site.toString() : 'https://example.com/';
+const ogImage = new URL(`${base}og.svg`, siteUrl).toString();
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <script is:inline>
+      const storedTheme = localStorage.getItem('theme');
+      const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      const theme = storedTheme || preferredTheme;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme;
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href={`${base}favicon.svg`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Pular para conteudo</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="logo" href={base} aria-label="Ir para a home">Kollinn Benvenutti</a>
+        <nav class="nav-links" aria-label="Principal">
+          <a href={base}>Home</a>
+          <a href={`${base}projects/`}>Projects</a>
+          <a href={`${base}about/`}>About</a>
+          <a href={`${base}#contact`}>Contact</a>
+        </nav>
+        <ThemeToggle />
+      </div>
+    </header>
+    <main id="main">
+      <div class="container">
+        <slot />
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-links">
+          <a href="https://github.com/kollinnbenv" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://linkedin.com/in/kollinnbenv" target="_blank" rel="noopener">LinkedIn</a>
+          <a href={`${base}projects/`}>Projetos</a>
+          <a href={`${base}about/`}>Sobre</a>
+        </div>
+        <small>(c) 2026 Kollinn Benvenutti. Todos os direitos reservados.</small>
+      </div>
+    </footer>
+  </body>
+</html>

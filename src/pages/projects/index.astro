@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import FilterBar from '../../components/FilterBar.astro';
+import SearchInput from '../../components/SearchInput.astro';
+import projects from '../../../content/projects.json';
+
+const base = import.meta.env.BASE_URL;
+const tags = Array.from(new Set(projects.flatMap((project) => project.tags))).sort();
+---
+<BaseLayout title="Projects" description="Lista de projetos de DevOps, SRE e Cloud com foco em impacto de negocio.">
+  <section class="page-hero">
+    <h1>Projetos</h1>
+    <p>
+      Colecao de iniciativas em IaC, Kubernetes e observability. Filtre por tag ou pesquise por palavras-chave.
+    </p>
+  </section>
+
+  <section class="section">
+    <div class="filters">
+      <SearchInput />
+      <FilterBar tags={tags} />
+    </div>
+    <p class="summary" data-results-count aria-live="polite"></p>
+    <div class="grid" data-project-grid>
+      {projects.map((project) => (
+        <ProjectCard project={project} href={`${base}projects/${project.slug}/`} />
+      ))}
+    </div>
+    <p class="summary" data-no-results hidden>Sem resultados para os filtros atuais.</p>
+  </section>
+
+  <script is:inline>
+    const searchInput = document.querySelector('[data-search]');
+    const tagButtons = Array.from(document.querySelectorAll('[data-tag-filter]'));
+    const cards = Array.from(document.querySelectorAll('[data-project-card]'));
+    const noResults = document.querySelector('[data-no-results]');
+    const resultsCount = document.querySelector('[data-results-count]');
+    let activeTag = 'all';
+
+    const setActiveTag = (tag) => {
+      activeTag = tag;
+      tagButtons.forEach((button) => {
+        const isActive = button.dataset.tagFilter === tag;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    };
+
+    const applyFilters = () => {
+      const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const tags = (card.dataset.tags || '').split(',');
+        const title = card.dataset.title || '';
+        const summary = card.dataset.summary || '';
+        const matchesTag = activeTag === 'all' || tags.includes(activeTag);
+        const matchesQuery = !query || title.includes(query) || summary.includes(query);
+        const visible = matchesTag && matchesQuery;
+
+        card.toggleAttribute('hidden', !visible);
+        if (visible) visibleCount += 1;
+      });
+
+      if (resultsCount) {
+        resultsCount.textContent = `${visibleCount} projeto(s) encontrados`;
+      }
+
+      if (noResults) {
+        noResults.hidden = visibleCount !== 0;
+      }
+    };
+
+    tagButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        setActiveTag(button.dataset.tagFilter || 'all');
+        applyFilters();
+      });
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener('input', applyFilters);
+    }
+
+    applyFilters();
+  </script>
+</BaseLayout>

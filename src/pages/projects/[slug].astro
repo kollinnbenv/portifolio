@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Tag from '../../components/Tag.astro';
+import projects from '../../../content/projects.json';
+
+export async function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project }
+  }));
+}
+
+const { project } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const entries = await Astro.glob('../../../content/projects/*.md');
+const entry = entries.find((item) => item.file.endsWith(`/${project.slug}.md`));
+if (!entry) {
+  throw new Error(`Conteudo nao encontrado para ${project.slug}`);
+}
+
+const { Content } = await entry;
+const headings = entry.getHeadings
+  ? (await entry.getHeadings()).filter((heading) => heading.depth >= 2 && heading.depth <= 3)
+  : [];
+---
+<BaseLayout title={project.title} description={project.summary}>
+  <section class="page-hero">
+    <p class="summary">Projeto</p>
+    <h1>{project.title}</h1>
+    <p>{project.summary}</p>
+    <div class="tag-row">
+      {project.tags.map((tag) => (
+        <Tag label={tag} />
+      ))}
+    </div>
+    <p class="impact"><span>Impacto:</span> {project.impact}</p>
+    <div class="cta-row">
+      <a class="button" href={project.repoUrl} target="_blank" rel="noopener">Repo</a>
+      {project.demoUrl ? (
+        <a class="button" href={project.demoUrl} target="_blank" rel="noopener">Demo</a>
+      ) : null}
+      <a class="button" href={`${base}projects/`}>Voltar</a>
+    </div>
+  </section>
+
+  <section class="project-layout section">
+    <article class="project-content">
+      <Content />
+    </article>
+    {headings.length ? (
+      <aside class="project-toc" aria-label="Tabela de conteudos">
+        <h2>Conteudos</h2>
+        <ul>
+          {headings.map((heading) => (
+            <li>
+              <a href={`#${heading.slug}`}>{heading.text}</a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    ) : null}
+  </section>
+</BaseLayout>

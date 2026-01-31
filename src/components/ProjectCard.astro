@@ -1,0 +1,42 @@
+---
+import Tag from './Tag.astro';
+
+const { project, href } = Astro.props;
+const {
+  title,
+  summary,
+  tags = [],
+  repoUrl,
+  demoUrl,
+  impact
+} = project;
+
+const tagsData = tags.join(',').toLowerCase();
+const titleData = title.toLowerCase();
+const summaryData = summary.toLowerCase();
+---
+<article
+  class="card"
+  data-project-card
+  data-tags={tagsData}
+  data-title={titleData}
+  data-summary={summaryData}
+>
+  <div>
+    <h3><a href={href}>{title}</a></h3>
+    <p class="summary">{summary}</p>
+  </div>
+  <div class="tag-row">
+    {tags.map((tag) => (
+      <Tag label={tag} />
+    ))}
+  </div>
+  <p class="impact"><span>Impacto:</span> {impact}</p>
+  <div class="card-links">
+    <a href={repoUrl} target="_blank" rel="noopener" aria-label={`Repositorio ${title}`}>Repo</a>
+    {demoUrl ? (
+      <a href={demoUrl} target="_blank" rel="noopener" aria-label={`Demo ${title}`}>Demo</a>
+    ) : null}
+    <a href={href} aria-label={`Detalhes ${title}`}>Detalhes</a>
+  </div>
+</article>

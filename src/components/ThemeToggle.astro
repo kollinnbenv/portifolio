@@ -1,0 +1,30 @@
+---
+---
+<button class="theme-toggle" type="button" data-theme-toggle aria-label="Alternar tema" aria-pressed="false">
+  Tema
+</button>
+
+<script is:inline>
+  const toggle = document.querySelector('[data-theme-toggle]');
+  const getStoredTheme = () => localStorage.getItem('theme');
+  const getPreferredTheme = () => (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const applyTheme = (theme) => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    if (toggle) {
+      toggle.setAttribute('aria-pressed', theme === 'dark');
+      toggle.textContent = theme === 'dark' ? 'Tema claro' : 'Tema escuro';
+    }
+  };
+
+  const initial = getStoredTheme() || getPreferredTheme();
+  applyTheme(initial);
+
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', next);
+      applyTheme(next);
+    });
+  }
+</script>

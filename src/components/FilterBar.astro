@@ -1,0 +1,11 @@
+---
+const { tags = [] } = Astro.props;
+---
+<div class="filter-bar" role="group" aria-label="Filtrar por tag">
+  <button class="tag-button is-active" type="button" data-tag-filter="all" aria-pressed="true">Todos</button>
+  {tags.map((tag) => (
+    <button class="tag-button" type="button" data-tag-filter={tag} aria-pressed="false">
+      {tag}
+    </button>
+  ))}
+</div>
