@@ -13,6 +13,6 @@
   <rect x="80" y="80" width="1040" height="470" rx="32" fill="#101826" stroke="#1f2a37" stroke-width="2" />
   <rect x="120" y="120" width="200" height="10" fill="url(#accent)" />
   <text x="120" y="230" fill="#f6f5f2" font-size="64" font-family="Space Grotesk, sans-serif" font-weight="700">Kollinn Benvenutti</text>
-  <text x="120" y="300" fill="#9aa4b2" font-size="28" font-family="IBM Plex Sans, sans-serif">DevOps / SRE / Cloud Engineer</text>
+  <text x="120" y="300" fill="#9aa4b2" font-size="28" font-family="IBM Plex Sans, sans-serif">DevOps / SRE / Plataform Engineer</text>
   <text x="120" y="380" fill="#9aa4b2" font-size="22" font-family="IBM Plex Sans, sans-serif">Infraestrutura automatizada, confiavel e observavel.</text>
 </svg>

@@ -1,12 +1,10 @@
 [
   {
-    "slug": "terraform-state-guardian",
-    "title": "Terraform State Guardian",
-    "summary": "Pipeline de IaC com locking remoto, politicas e drift detection automatizado.",
-    "tags": ["terraform", "iac", "security"],
-    "repoUrl": "https://github.com/kollinnbenv/terraform-state-guardian",
-    "demoUrl": "https://example.com/terraform-state-guardian",
-    "impact": "Reduz conflitos de estado e falhas de deploy em ambientes multi-time.",
+    "slug": "mozilla-hubs",
+    "title": "Migração Mozilla Hub para Azure Kubernetes Service com Terraform",
+    "summary": "Automação da migração do Mozilla Hub para AKS usando Terraform, garantindo segurança e confiabilidade com observabilidade integrada.",
+    "tags": ["terraform", "iac", "security", "azure", "kubernetes", "grafana", "prometheus", "kubeclt", "azure cli", "yaml"],
+    "impact": "minha participação como SRE junior no auxilio da migração em conjunto com um SRE senior, garantindo a segurança e confiabilidade do ambiente com monitoramento e alertas proativos.",
     "featured": true
   },
   {
@@ -17,7 +15,7 @@
     "repoUrl": "https://github.com/kollinnbenv/kube-ops-fleet",
     "demoUrl": "https://example.com/kube-ops-fleet",
     "impact": "Provisionamento consistente de clusters em minutos com guardrails.",
-    "featured": true
+    "featured": false
   },
   {
     "slug": "observability-control-plane",
@@ -27,7 +25,7 @@
     "repoUrl": "https://github.com/kollinnbenv/observability-control-plane",
     "demoUrl": "https://example.com/observability-control-plane",
     "impact": "Corta tempo medio de diagnostico e elimina alertas ruidosos.",
-    "featured": true
+    "featured": false
   },
   {
     "slug": "postgres-ha-blueprint",

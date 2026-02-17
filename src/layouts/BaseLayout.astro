@@ -4,7 +4,7 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 
 const { title, description } = Astro.props;
 const base = import.meta.env.BASE_URL;
-const pageTitle = title ? `${title} | Kollinn Benvenutti` : 'Kollinn Benvenutti - DevOps / SRE / Cloud Engineer';
+const pageTitle = title ? `${title} | Kollinn Benvenutti` : 'Kollinn Benvenutti - DevOps / SRE / Plataform Engineer';
 const pageDescription = description || 'Portifolio focado em DevOps, SRE e Cloud, com projetos de infraestrutura moderna, observabilidade e automacao.';
 const siteUrl = Astro.site ? Astro.site.toString() : 'https://example.com/';
 const ogImage = new URL(`${base}og.svg`, siteUrl).toString();

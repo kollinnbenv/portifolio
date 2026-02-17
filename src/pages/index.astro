@@ -7,25 +7,24 @@ import projects from '../../content/projects.json';
 const base = import.meta.env.BASE_URL;
 const featured = projects.filter((project) => project.featured).slice(0, 3);
 const skills = [
-  'terraform',
-  'kubernetes',
-  'gitops',
-  'observability',
-  'sre',
-  'aws',
-  'gcp',
-  'ci-cd',
-  'security',
-  'postgres'
+  'Terraform',
+  'Kubernetes',
+  'GitOPS',
+  'SRE',
+  'AWS',
+  'Oracle Cloud',
+  'Azure Pipelines',
+  'Security Automation',
+  'PostgreSQL',
 ];
 ---
-<BaseLayout title="Home" description="DevOps, SRE e Cloud com foco em automacao, confiabilidade e plataformas modernas.">
+<BaseLayout title="Home" description="Engenheiro de plataforma e confiabilidade focado nas automações de infraestrutura e segurança em nuvem.">
   <section class="section hero">
     <div>
       <h1 class="reveal" style="--delay: 40ms;">Kollinn Benvenutti</h1>
-      <p class="reveal tagline" style="--delay: 80ms;">DevOps / SRE / Cloud Engineer</p>
+      <p class="reveal tagline" style="--delay: 80ms;">DevOps / SRE / Plataform Engineer</p>
       <p class="reveal" style="--delay: 120ms;">
-        Engenharia de confiabilidade, automacao de infraestrutura e plataformas cloud prontas para escala.
+        Engenharia de confiabilidade, automacao de infraestrutura e plataformas cloud com IaC.
       </p>
       <ul class="hero-bullets reveal" style="--delay: 160ms;">
         <li>Terraform + IaC</li>
@@ -43,8 +42,7 @@ const skills = [
       <div class="card">
         <h2>Operacao previsivel</h2>
         <p class="summary">
-          Pipelines de entrega com guardrails, SLOs e observabilidade completa. Menos alertas ruidosos,
-          mais confiabilidade real.
+          Segurança na infraestrutura, automação dos processos e redução de custos para uma operação de infraestrutura presivível e resiliente.
         </p>
         <div class="tag-row">
           <Tag label="slo" />
@@ -76,7 +74,7 @@ const skills = [
   <section id="contact" class="section">
     <h2 class="section-title">Contato</h2>
     <p class="summary">
-      Vamos falar sobre resiliencia, custos e operacao cloud. Respondo rapido para projetos de infraestrutura e SRE.
+      Caso você queira entrar em contato, discutir oportunidades ou apenas dizer oi, sinta-se à vontade para me enviar uma mensagem. Estou sempre aberto a novas conexões e colaborações.
     </p>
     <div class="cta-row">
       <a class="button" href="https://github.com/kollinnbenv" target="_blank" rel="noopener">GitHub</a>

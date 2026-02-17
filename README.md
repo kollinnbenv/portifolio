@@ -28,3 +28,8 @@ npm run preview
 3. Faca push para `main`. O workflow `deploy.yml` vai publicar a pasta `dist`.
 
 Se preferir outro provedor, o build gera um site estatico em `dist`.
+
+## Deploy no Render (Web Service)
+- Build Command: `npm run build`
+- Start Command: `npm run start`
+- O script `start` serve a pasta `dist` diretamente (sem fallback SPA), evitando bloqueio de host do `astro preview` e preservando rotas como `/about/`.
