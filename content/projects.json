@@ -8,6 +8,15 @@
     "featured": true
   },
   {
+    "slug": "postgres16",
+    "title": "Upgrade Azure Flexible Server para Postgres 15 -> 16",
+    "summary": "Multi cliente com upgrade de versão do Postgres em ambiente Azure.",
+    "tags": ["terraform", "pipelines", "ci-cd","postgres", "cloud", "sre"],
+    "demoUrl": "",
+    "impact": "Ambiente de produção atualizado com riscos controlados.",
+    "featured": true
+  },
+  {
     "slug": "kube-ops-fleet",
     "title": "Kube Ops Fleet",
     "summary": "Padrao de cluster multi-tenant com GitOps, politicas e bootstrap automatico.",
@@ -25,16 +34,6 @@
     "repoUrl": "https://github.com/kollinnbenv/observability-control-plane",
     "demoUrl": "https://example.com/observability-control-plane",
     "impact": "Corta tempo medio de diagnostico e elimina alertas ruidosos.",
-    "featured": false
-  },
-  {
-    "slug": "postgres-ha-blueprint",
-    "title": "Postgres HA Blueprint",
-    "summary": "Arquitetura de Postgres resiliente com failover, backups e testes de restore.",
-    "tags": ["postgres", "cloud", "sre"],
-    "repoUrl": "https://github.com/kollinnbenv/postgres-ha-blueprint",
-    "demoUrl": "",
-    "impact": "Aumenta disponibilidade e reduz tempo de recuperacao em incidentes.",
     "featured": false
   },
   {
