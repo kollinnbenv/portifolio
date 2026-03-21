@@ -19,7 +19,14 @@ npm run preview
 
 ## Conteudo
 - `content/projects.json` com a lista de projetos.
-- `content/projects/*.md` com detalhes de cada projeto.
+- `content/projects/*.md` com detalhes gerais de cada projeto.
+- `content/projects/<slug>/diary/*.md` para diario com varios posts do mesmo projeto.
+  Tambem e aceito `content/projects/<slug>/*.md` para posts sem subpasta `diary`.
+  Se precisar usar outra pasta, defina `diaryFolder` no projeto dentro de `content/projects.json`.
+  Cada post pode usar frontmatter:
+  - `title`: titulo do post
+  - `date`: data no formato `YYYY-MM-DD` (usada para ordenacao)
+  - `summary`: resumo curto opcional
 - `public/cv-kollinn.pdf` e links de contato sao placeholders (substitua pelos seus).
 
 ## Deploy no GitHub Pages (Astro)

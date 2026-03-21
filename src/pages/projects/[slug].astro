@@ -13,16 +13,104 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
-const entries = await Astro.glob('../../../content/projects/*.md');
-const entry = entries.find((item) => item.file.endsWith(`/${project.slug}.md`));
-if (!entry) {
+const isGlobNoMatch = (error) =>
+  error?.name === 'AstroGlobNoMatch' ||
+  (typeof error?.message === 'string' && error.message.includes('AstroGlobNoMatch'));
+
+let projectEntries = [];
+try {
+  projectEntries = await Astro.glob('../../../content/projects/*.md');
+} catch (error) {
+  if (!isGlobNoMatch(error)) throw error;
+}
+
+let diaryEntriesNested = [];
+try {
+  diaryEntriesNested = await Astro.glob('../../../content/projects/*/diary/*.md');
+} catch (error) {
+  if (!isGlobNoMatch(error)) throw error;
+}
+
+let diaryEntriesFlat = [];
+try {
+  diaryEntriesFlat = await Astro.glob('../../../content/projects/*/*.md');
+} catch (error) {
+  if (!isGlobNoMatch(error)) throw error;
+}
+
+const entry = projectEntries.find((item) => item.file.endsWith(`/${project.slug}.md`));
+const projectDiaryFolder = typeof project.diaryFolder === 'string' && project.diaryFolder.trim()
+  ? project.diaryFolder.trim()
+  : project.slug;
+const projectDiaryNestedPath = `/content/projects/${projectDiaryFolder}/diary/`;
+const projectDiaryFlatPath = `/content/projects/${projectDiaryFolder}/`;
+const projectDiaryEntries = [
+  ...diaryEntriesNested.filter((item) => item.file.includes(projectDiaryNestedPath)),
+  ...diaryEntriesFlat.filter(
+    (item) =>
+      item.file.includes(projectDiaryFlatPath) &&
+      !item.file.includes('/diary/') &&
+      !item.file.endsWith(`/${project.slug}.md`)
+  )
+];
+
+const toDate = (dateInput) => {
+  if (typeof dateInput !== 'string' || !dateInput.trim()) return null;
+  const normalized = /^\d{4}-\d{2}-\d{2}$/.test(dateInput) ? `${dateInput}T00:00:00` : dateInput;
+  const parsed = new Date(normalized);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+const diaryPosts = (
+  await Promise.all(
+    projectDiaryEntries
+      .map(async (item) => {
+        const diaryEntry = await item;
+        const frontmatter = diaryEntry.frontmatter ?? {};
+        const dateValue = toDate(frontmatter.date);
+        const fileName = item.file.split('/').pop()?.replace(/\.md$/, '') ?? 'post';
+        const fallbackTitle = fileName
+          .replace(/^\d{4}-\d{2}-\d{2}-?/, '')
+          .replace(/[-_]/g, ' ')
+          .trim();
+
+        return {
+          slug: fileName,
+          title: typeof frontmatter.title === 'string' && frontmatter.title.trim()
+            ? frontmatter.title.trim()
+            : fallbackTitle || 'Post',
+          summary: typeof frontmatter.summary === 'string' ? frontmatter.summary.trim() : '',
+          dateSort: dateValue ? dateValue.getTime() : 0,
+          dateLabel: dateValue
+            ? dateValue.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
+            : 'Data nao informada',
+          Content: diaryEntry.Content
+        };
+      })
+  )
+).sort((a, b) => b.dateSort - a.dateSort);
+
+if (!entry && diaryPosts.length === 0) {
   throw new Error(`Conteudo nao encontrado para ${project.slug}`);
 }
 
-const { Content } = await entry;
-const headings = entry.getHeadings
-  ? (await entry.getHeadings()).filter((heading) => heading.depth >= 2 && heading.depth <= 3)
-  : [];
+let Content = null;
+let headings = [];
+if (entry) {
+  const loadedEntry = await entry;
+  Content = loadedEntry.Content;
+  headings = entry.getHeadings
+    ? (await entry.getHeadings()).filter((heading) => heading.depth >= 2 && heading.depth <= 3)
+    : [];
+}
+
+const tocItems = [
+  ...headings,
+  ...diaryPosts.map((post) => ({
+    slug: `diary-${post.slug}`,
+    text: post.title
+  }))
+];
 ---
 <BaseLayout title={project.title} description={project.summary}>
   <section class="page-hero">
@@ -45,14 +133,47 @@ const headings = entry.getHeadings
   </section>
 
   <section class="project-layout section">
-    <article class="project-content">
-      <Content />
-    </article>
-    {headings.length ? (
+    <div class="project-main">
+      {Content ? (
+        <article class="project-content">
+          <Content />
+        </article>
+      ) : null}
+
+      {diaryPosts.length ? (
+        <section class="project-diary" aria-label="Diario do projeto">
+          <h2>Diario do projeto</h2>
+          <div class="project-diary-list">
+            {diaryPosts.map((post) => {
+              const PostContent = post.Content;
+              return (
+                <article class="project-diary-post" id={`diary-${post.slug}`}>
+                  <details class="project-diary-toggle">
+                    <summary class="project-diary-summary">
+                      <header class="project-diary-header">
+                        <p class="summary">{post.dateLabel}</p>
+                        <h3>{post.title}</h3>
+                        {post.summary ? <p>{post.summary}</p> : null}
+                      </header>
+                      <span class="project-diary-indicator" aria-hidden="true"></span>
+                    </summary>
+                    <div class="project-diary-body">
+                      <PostContent />
+                    </div>
+                  </details>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+    </div>
+
+    {tocItems.length ? (
       <aside class="project-toc" aria-label="Tabela de conteudos">
         <h2>Conteudos</h2>
         <ul>
-          {headings.map((heading) => (
+          {tocItems.map((heading) => (
             <li>
               <a href={`#${heading.slug}`}>{heading.text}</a>
             </li>

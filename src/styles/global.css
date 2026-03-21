@@ -418,6 +418,11 @@ main {
   grid-template-columns: minmax(0, 1fr);
 }
 
+.project-main {
+  display: grid;
+  gap: 2rem;
+}
+
 .project-content {
   background: var(--surface);
   padding: 1.75rem;
@@ -428,6 +433,88 @@ main {
 
 .project-content h2 {
   margin-top: 2rem;
+}
+
+.project-diary {
+  display: grid;
+  gap: 1rem;
+}
+
+.project-diary h2 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2vw, 1.6rem);
+}
+
+.project-diary-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.project-diary-post {
+  background: var(--surface);
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--border) 15%, transparent);
+  box-shadow: 0 16px 30px rgba(10, 14, 18, 0.08);
+  overflow: hidden;
+}
+
+.project-diary-header {
+  margin: 0;
+}
+
+.project-diary-header .summary {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+}
+
+.project-diary-header h3 {
+  margin: 0.15rem 0 0.35rem;
+}
+
+.project-diary-header p {
+  margin: 0;
+}
+
+.project-diary-post h2 {
+  margin-top: 1.6rem;
+}
+
+.project-diary-toggle {
+  display: block;
+}
+
+.project-diary-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.project-diary-summary::-webkit-details-marker {
+  display: none;
+}
+
+.project-diary-indicator {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.3rem;
+  border-right: 2px solid color-mix(in srgb, var(--text) 85%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--text) 85%, transparent);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.project-diary-toggle[open] .project-diary-indicator {
+  transform: rotate(-135deg);
+}
+
+.project-diary-body {
+  padding: 0 1.5rem 1.5rem;
 }
 
 .project-toc {
@@ -534,6 +621,32 @@ main {
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;
+}
+
+.external-notice {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 80;
+  max-width: min(90vw, 360px);
+  margin: 0;
+  padding: 0.65rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--border) 20%, transparent);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  font-size: 0.85rem;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.external-notice.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .reveal {

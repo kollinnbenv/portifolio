@@ -58,13 +58,69 @@ const ogImage = new URL(`${base}og.svg`, siteUrl).toString();
     <footer class="site-footer">
       <div class="container">
         <div class="footer-links">
-          <a href="https://github.com/kollinnbenv" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://linkedin.com/in/kollinnbenv" target="_blank" rel="noopener">LinkedIn</a>
+          <a
+            href="https://github.com/kollinnbenv"
+            target="_blank"
+            rel="noopener"
+            aria-label="GitHub (link externo, abre em nova aba)"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://linkedin.com/in/kollinnbenv"
+            target="_blank"
+            rel="noopener"
+            aria-label="LinkedIn (link externo, abre em nova aba)"
+          >
+            LinkedIn
+          </a>
           <a href={`${base}projects/`}>Projetos</a>
           <a href={`${base}about/`}>Sobre</a>
         </div>
         <small>(c) 2026 Kollinn Benvenutti. Todos os direitos reservados.</small>
       </div>
     </footer>
+    <p class="external-notice" data-external-notice role="status" aria-live="polite" aria-atomic="true" hidden></p>
+    <script is:inline>
+      const externalNotice = document.querySelector('[data-external-notice]');
+      let externalNoticeTimer;
+
+      const isExternalBlankLink = (anchor) => {
+        if (!(anchor instanceof HTMLAnchorElement)) return false;
+        if (anchor.target !== '_blank') return false;
+        if (!anchor.href) return false;
+        try {
+          const url = new URL(anchor.href, window.location.href);
+          return (url.protocol === 'http:' || url.protocol === 'https:') && url.origin !== window.location.origin;
+        } catch {
+          return false;
+        }
+      };
+
+      const getHostLabel = (href) => {
+        try {
+          return new URL(href, window.location.href).hostname.replace(/^www\./, '');
+        } catch {
+          return 'site externo';
+        }
+      };
+
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const anchor = target.closest('a');
+        if (!anchor || !isExternalBlankLink(anchor) || !externalNotice) return;
+
+        externalNotice.textContent = `Voce esta saindo para ${getHostLabel(anchor.href)}.`;
+        externalNotice.hidden = false;
+        externalNotice.classList.add('is-visible');
+
+        window.clearTimeout(externalNoticeTimer);
+        externalNoticeTimer = window.setTimeout(() => {
+          externalNotice.classList.remove('is-visible');
+          externalNotice.hidden = true;
+        }, 2200);
+      });
+    </script>
   </body>
 </html>

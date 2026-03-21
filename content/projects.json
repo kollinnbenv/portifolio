@@ -16,44 +16,14 @@
     "impact": "Ambiente de produção atualizado com riscos controlados.",
     "featured": true
   },
+  
   {
-    "slug": "kube-ops-fleet",
-    "title": "Kube Ops Fleet",
-    "summary": "Padrao de cluster multi-tenant com GitOps, politicas e bootstrap automatico.",
-    "tags": ["kubernetes", "gitops", "sre"],
-    "repoUrl": "https://github.com/kollinnbenv/kube-ops-fleet",
-    "demoUrl": "https://example.com/kube-ops-fleet",
-    "impact": "Provisionamento consistente de clusters em minutos com guardrails.",
-    "featured": false
-  },
-  {
-    "slug": "observability-control-plane",
+    "slug": "observability",
     "title": "Observability Control Plane",
-    "summary": "Stack de metricas, logs e tracing com foco em SLOs e custo previsivel.",
-    "tags": ["observability", "sre", "cloud"],
-    "repoUrl": "https://github.com/kollinnbenv/observability-control-plane",
-    "demoUrl": "https://example.com/observability-control-plane",
-    "impact": "Corta tempo medio de diagnostico e elimina alertas ruidosos.",
-    "featured": false
-  },
-  {
-    "slug": "queue-autoscaler",
-    "title": "Queue Autoscaler",
-    "summary": "Autoscaling baseado em fila com HPA custom e previsao de carga.",
-    "tags": ["kubernetes", "autoscaling", "cloud"],
-    "repoUrl": "https://github.com/kollinnbenv/queue-autoscaler",
-    "demoUrl": "https://example.com/queue-autoscaler",
-    "impact": "Reduz custo ao ajustar pods a partir da demanda real.",
-    "featured": false
-  },
-  {
-    "slug": "gitops-release-train",
-    "title": "GitOps Release Train",
-    "summary": "Fluxo de releases com promocoes por ambiente e auditoria integrada.",
-    "tags": ["gitops", "ci-cd", "terraform"],
-    "repoUrl": "https://github.com/kollinnbenv/gitops-release-train",
-    "demoUrl": "",
-    "impact": "Diminui janelas de deploy e aumenta confianca nas mudancas.",
-    "featured": false
+    "summary": "experência aaplicável em laboratórios e projetos de produção",
+    "tags": ["gitops", "flux", "elastic search", "kibana", "grafana", "prometheus", "jagger", "open telemetry", "otel collector", "azure diagnostic settigs"],
+    "diaryFolder": "observabilidade",
+    "impact": "Meu aprendizado em observabilidade durante meu processo de carreira.",
+    "featured": true
   }
 ]
