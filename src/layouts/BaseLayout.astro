@@ -6,8 +6,9 @@ const { title, description } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const pageTitle = title ? `${title} | Kollinn Benvenutti` : 'Kollinn Benvenutti - DevOps / SRE / Plataform Engineer';
 const pageDescription = description || 'Portifolio focado em DevOps, SRE e Cloud, com projetos de infraestrutura moderna, observabilidade e automacao.';
-const siteUrl = Astro.site ? Astro.site.toString() : 'https://example.com/';
+const siteUrl = Astro.site ? Astro.site.toString() : 'https://kollinnbenvenutti.atelierlab.cloud';
 const ogImage = new URL(`${base}og.svg`, siteUrl).toString();
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -23,8 +24,11 @@ const ogImage = new URL(`${base}og.svg`, siteUrl).toString();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonicalUrl} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />

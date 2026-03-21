@@ -5,14 +5,20 @@ Portfolio estatico em Astro com foco em DevOps, SRE e Cloud.
 ## Requisitos
 - Node.js 18+ (recomendado 20+)
 
+## Variaveis de ambiente
+- Configure `SITE_URL` com o dominio canonico do site.
+- Use `.env.example` como referencia.
+
 ## Como rodar
 ```bash
 npm install
+export SITE_URL=https://kollinnbenvenutti.atelierlab.cloud
 npm run dev
 ```
 
 ## Build
 ```bash
+export SITE_URL=https://kollinnbenvenutti.atelierlab.cloud
 npm run build
 npm run preview
 ```
@@ -30,9 +36,10 @@ npm run preview
 - `public/cv-kollinn.pdf` e links de contato sao placeholders (substitua pelos seus).
 
 ## Deploy no GitHub Pages (Astro)
-1. Atualize `astro.config.mjs` com seu usuario e repo (campos `site` e `base`).
-2. No GitHub, ative Pages em **Settings > Pages** e selecione **GitHub Actions**.
-3. Faca push para `main`. O workflow `deploy.yml` vai publicar a pasta `dist`.
+1. Configure `SITE_URL` no ambiente de deploy com seu dominio final.
+2. Ajuste `astro.config.mjs` se precisar de `base` diferente de `/`.
+3. No GitHub, ative Pages em **Settings > Pages** e selecione **GitHub Actions**.
+4. Faca push para `main`. O workflow `deploy.yml` vai publicar a pasta `dist`.
 
 Se preferir outro provedor, o build gera um site estatico em `dist`.
 
