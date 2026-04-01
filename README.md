@@ -1,26 +1,29 @@
-# kollinn-portfolio
+# Aplicação
 
-Portfolio estatico em Astro com foco em DevOps, SRE e Cloud.
+Aplicação em Astro
 
 ## Requisitos
-- Node.js 18+ (recomendado 20+)
+- Node.js 22.12+ (recomendado 22 LTS)
+- npm 9.6.5+
 
 ## Variaveis de ambiente
 - Configure `SITE_URL` com o dominio canonico do site.
-- Use `.env.example` como referencia.
-
+- Opcional: `GOOGLE_SITE_VERIFICATION` para a meta tag de verificacao do Search Console.
 ## Como rodar
 ```bash
 npm install
-export SITE_URL=https://kollinnbenvenutti.atelierlab.cloud
+export SITE_URL=https://meusite.meudomínio
 npm run dev
 ```
 
+`npm run dev` inicia o servidor local em `127.0.0.1:4321`.
+Para expor na rede local, use `npm run dev:lan`.
+
 ## Build
 ```bash
-export SITE_URL=https://kollinnbenvenutti.atelierlab.cloud
+export SITE_URL=https://meusite.meudomínio
 npm run build
-npm run preview
+npm run prd
 ```
 
 ## Conteudo

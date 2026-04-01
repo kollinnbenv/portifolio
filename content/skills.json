@@ -1,0 +1,14 @@
+[
+  "Terraform Azure provider",
+  "GitOPS",
+  "Azure Pipelines",
+  "Elastic Search",
+  "Kibana",
+  "Grafana",
+  "Prometheus",
+  "Log Analytics",
+  "Keda Autoscaler for Kubernetes",
+  "Azure Diagnostic Settings",
+  "Azure Kubernetes Service",
+  "Azure Flexible Server"
+]

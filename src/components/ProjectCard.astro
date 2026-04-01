@@ -1,5 +1,6 @@
 ---
 import Tag from './Tag.astro';
+import { getSafeExternalUrl } from '../utils/safeLinks';
 
 const { project, href } = Astro.props;
 const {
@@ -14,6 +15,8 @@ const {
 const tagsData = tags.join(',').toLowerCase();
 const titleData = title.toLowerCase();
 const summaryData = summary.toLowerCase();
+const safeRepoUrl = getSafeExternalUrl(repoUrl);
+const safeDemoUrl = getSafeExternalUrl(demoUrl);
 ---
 <article
   class="card"
@@ -33,9 +36,11 @@ const summaryData = summary.toLowerCase();
   </div>
   <p class="impact"><span>Impacto:</span> {impact}</p>
   <div class="card-links">
-    <a href={repoUrl} target="_blank" rel="noopener" aria-label={`Repositorio ${title}`}>Repo</a>
-    {demoUrl ? (
-      <a href={demoUrl} target="_blank" rel="noopener" aria-label={`Demo ${title}`}>Demo</a>
+    {safeRepoUrl ? (
+      <a href={safeRepoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Repositorio ${title}`}>Repo</a>
+    ) : null}
+    {safeDemoUrl ? (
+      <a href={safeDemoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Demo ${title}`}>Demo</a>
     ) : null}
     <a href={href} aria-label={`Detalhes ${title}`}>Detalhes</a>
   </div>

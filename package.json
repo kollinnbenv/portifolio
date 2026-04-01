@@ -3,13 +3,19 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=9.6.5"
+  },
   "scripts": {
-    "dev": "astro dev --host 0.0.0.0 --port 4321",
+    "dev": "astro dev --host 127.0.0.1 --port 4321",
+    "dev:lan": "astro dev --host 0.0.0.0 --port 4321",
     "build": "astro build",
-    "start": "serve dist -l tcp://0.0.0.0:${PORT:-4321}"
+    "start": "serve -c ../serve.json dist -l tcp://0.0.0.0:${PORT:-4321}",
+    "prd": "npm run build && npm run start"
   },
   "dependencies": {
-    "astro": "^4.16.0",
-    "serve": "^14.2.5"
+    "astro": "^6.1.2",
+    "serve": "^14.2.6"
   }
 }

@@ -5,7 +5,8 @@
     "summary": "Automação da migração do Mozilla Hub para AKS usando Terraform, garantindo segurança e confiabilidade com observabilidade integrada.",
     "tags": ["terraform", "iac", "security", "azure", "kubernetes", "grafana", "prometheus", "kubeclt", "azure cli", "yaml"],
     "impact": "minha participação como SRE junior no auxilio da migração em conjunto com um SRE senior, garantindo a segurança e confiabilidade do ambiente com monitoramento e alertas proativos.",
-    "featured": true
+    "featured": true,
+    "homeRank": 4
   },
   {
     "slug": "postgres16",
@@ -14,9 +15,9 @@
     "tags": ["terraform", "pipelines", "ci-cd","postgres", "cloud", "sre"],
     "demoUrl": "",
     "impact": "Ambiente de produção atualizado com riscos controlados.",
-    "featured": true
+    "featured": true,
+    "homeRank": 2
   },
-  
   {
     "slug": "observability",
     "title": "Observability Control Plane",
@@ -24,6 +25,17 @@
     "tags": ["gitops", "flux", "elastic search", "kibana", "grafana", "prometheus", "jagger", "open telemetry", "otel collector", "azure diagnostic settigs"],
     "diaryFolder": "observabilidade",
     "impact": "Meu aprendizado em observabilidade durante meu processo de carreira.",
-    "featured": true
+    "featured": true,
+    "homeRank": 3
+  },
+  {
+    "slug": "keda",
+    "title": "Keda Autoscaling para Azure Kubernetes Service",
+    "summary": "implementação do Keda no cliente para os produtos utilizarem nos ambientes de lab, dev, qas e produção",
+    "tags": ["gitops", "flux", "keda", "service bus", "autoscaling", "azure", "kubernetes"],
+    "diaryFolder": "keda",
+    "impact": "Meu processo de implementação do Keda no cliente para os produtos utilizarem nos ambientes de lab, dev, qas e produção",
+    "featured": true,
+    "homeRank": 1
   }
 ]

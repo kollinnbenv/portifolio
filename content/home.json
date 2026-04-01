@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "title": "Home",
+    "description": "Platform Engineer e SRE "
+  },
+  "hero": {
+    "description": "",
+    "bullets": [
+      "Terraform + IaC",
+      "Kubernetes + GitOps",
+      "Observability + Troubleshooting",
+      "Cloud + Platform Engineering"
+    ],
+    "card": {
+      "title": "Operação previsível",
+      "description": "Platform Engineer e SRE trabalhando atuando como Cross-Over numa infraestrutura com segurança de privilégio mínimo, atuação clusters AKS com políticas kyvernos e telemetria de observabilidades de várias stacks, utilizando helm library templates para os produtos fazerem deployment nos ambientes desejados, trabalhando com 3 ambientes desenvolvimento, release e production",
+      "tags": [
+        "sprint",
+        "incident",
+        "kanban",
+        "rbac"
+      ]
+    }
+  }
+}

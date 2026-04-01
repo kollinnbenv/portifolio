@@ -3,51 +3,53 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Tag from '../components/Tag.astro';
 import projects from '../../content/projects.json';
+import personal from '../../content/personal.json';
+import skills from '../../content/skills.json';
+import home from '../../content/home.json';
+import { getSafeExternalUrl, getSafeMailtoUrl } from '../utils/safeLinks';
 
 const base = import.meta.env.BASE_URL;
-const featured = projects.filter((project) => project.featured).slice(0, 3);
-const skills = [
-  'Terraform',
-  'Kubernetes',
-  'GitOPS',
-  'SRE',
-  'AWS',
-  'Oracle Cloud',
-  'Azure Pipelines',
-  'Security Automation',
-  'PostgreSQL',
-];
+const getHomeRank = (project) =>
+  typeof project.homeRank === 'number' && Number.isFinite(project.homeRank)
+    ? project.homeRank
+    : Number.MAX_SAFE_INTEGER;
+
+const featured = projects
+  .filter((project) => project.featured)
+  .sort((a, b) => getHomeRank(a) - getHomeRank(b))
+  .slice(0, 3);
+const githubUrl = getSafeExternalUrl(personal.links.github);
+const linkedinUrl = getSafeExternalUrl(personal.links.linkedin);
+const emailUrl = getSafeMailtoUrl(personal.links.email);
+const normalizedCvFile = typeof personal.cvFile === 'string' ? personal.cvFile.trim().replace(/^\/+/, '') : '';
+const cvUrl = normalizedCvFile ? `${base}${normalizedCvFile}` : null;
 ---
-<BaseLayout title="Home" description="Engenheiro de plataforma e confiabilidade focado nas automações de infraestrutura e segurança em nuvem.">
+<BaseLayout title={home.meta.title} description={home.meta.description}>
   <section class="section hero">
     <div>
-      <h1 class="reveal" style="--delay: 40ms;">Kollinn Benvenutti</h1>
-      <p class="reveal tagline" style="--delay: 80ms;">DevOps / SRE / Plataform Engineer</p>
-      <p class="reveal" style="--delay: 120ms;">
-        Engenharia de confiabilidade, automacao de infraestrutura e plataformas cloud com IaC.
-      </p>
+      <h1 class="reveal" style="--delay: 40ms;">{personal.name}</h1>
+      <p class="reveal tagline" style="--delay: 80ms;">{personal.role}</p>
+      <p class="reveal" style="--delay: 120ms;">{home.hero.description}</p>
       <ul class="hero-bullets reveal" style="--delay: 160ms;">
-        <li>Terraform + IaC</li>
-        <li>Kubernetes + GitOps</li>
-        <li>Observability + SRE</li>
+        {home.hero.bullets.map((bullet) => (
+          <li>{bullet}</li>
+        ))}
       </ul>
       <div class="cta-row reveal" style="--delay: 220ms;">
         <a class="button primary" href={`${base}#projects`}>Ver projetos</a>
-        <a class="button" href="https://github.com/kollinnbenv" target="_blank" rel="noopener">GitHub</a>
-        <a class="button" href="https://linkedin.com/in/kollinnbenv" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="button" href={`${base}cv-kollinn.pdf`} download>Baixar CV</a>
+        {githubUrl ? <a class="button" href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a> : null}
+        {linkedinUrl ? <a class="button" href={linkedinUrl} target="_blank" rel="noopener noreferrer">LinkedIn</a> : null}
+        {cvUrl ? <a class="button" href={cvUrl} download>Baixar CV</a> : null}
       </div>
     </div>
     <div class="reveal" style="--delay: 200ms;">
       <div class="card">
-        <h2>Operacao previsivel</h2>
-        <p class="summary">
-          Segurança na infraestrutura, automação dos processos e redução de custos para uma operação de infraestrutura presivível e resiliente.
-        </p>
+        <h2>{home.hero.card.title}</h2>
+        <p class="summary">{home.hero.card.description}</p>
         <div class="tag-row">
-          <Tag label="slo" />
-          <Tag label="incident" />
-          <Tag label="platform" />
+          {home.hero.card.tags.map((tag) => (
+            <Tag label={tag} />
+          ))}
         </div>
       </div>
     </div>
@@ -77,9 +79,9 @@ const skills = [
       Caso você queira entrar em contato, discutir oportunidades ou apenas dizer oi, sinta-se à vontade para me enviar uma mensagem. Estou sempre aberto a novas conexões e colaborações.
     </p>
     <div class="cta-row">
-      <a class="button" href="https://github.com/kollinnbenv" target="_blank" rel="noopener">GitHub</a>
-      <a class="button" href="https://www.linkedin.com/in/kollinnb/" target="_blank" rel="noopener">LinkedIn</a>
-      <a class="button" href="mailto:kollinnbenvenutti@gmail.com">Email</a>
+      {githubUrl ? <a class="button" href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a> : null}
+      {linkedinUrl ? <a class="button" href={linkedinUrl} target="_blank" rel="noopener noreferrer">LinkedIn</a> : null}
+      {emailUrl ? <a class="button" href={emailUrl}>Email</a> : null}
     </div>
   </section>
 </BaseLayout>
