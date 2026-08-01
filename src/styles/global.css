@@ -664,6 +664,15 @@ main {
   margin-bottom: 1rem;
 }
 
+.site-footer small {
+  display: block;
+}
+
+.ai-disclosure {
+  margin-top: 0.35rem;
+  opacity: 0.85;
+}
+
 .external-notice {
   position: fixed;
   right: 1rem;

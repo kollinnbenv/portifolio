@@ -93,7 +93,10 @@ const linkedinUrl = getSafeExternalUrl(personal.links.linkedin);
           <a href={`${base}projects/`}>Projetos</a>
           <a href={`${base}about/`}>Sobre</a>
         </div>
-        <small>(c) 2026 {personal.name}. Todos os direitos reservados.</small>
+        <small>(c) 2026 {personal.name}. </small>
+        <small class="ai-disclosure">
+          Conteúdo feito por auxílio de Inteligência Artificial com revisão humana ({personal.name}).
+        </small>
       </div>
     </footer>
     <p class="external-notice" data-external-notice role="status" aria-live="polite" aria-atomic="true" hidden></p>
