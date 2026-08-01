@@ -9,6 +9,7 @@ import home from '../../content/home.json';
 import { getSafeExternalUrl, getSafeMailtoUrl } from '../utils/safeLinks';
 
 const base = import.meta.env.BASE_URL;
+const heroDescription = typeof home.hero.description === 'string' ? home.hero.description.trim() : '';
 const getHomeRank = (project) =>
   typeof project.homeRank === 'number' && Number.isFinite(project.homeRank)
     ? project.homeRank
@@ -29,7 +30,7 @@ const cvUrl = normalizedCvFile ? `${base}${normalizedCvFile}` : null;
     <div>
       <h1 class="reveal" style="--delay: 40ms;">{personal.name}</h1>
       <p class="reveal tagline" style="--delay: 80ms;">{personal.role}</p>
-      <p class="reveal" style="--delay: 120ms;">{home.hero.description}</p>
+      {heroDescription ? <p class="reveal" style="--delay: 120ms;">{heroDescription}</p> : null}
       <ul class="hero-bullets reveal" style="--delay: 160ms;">
         {home.hero.bullets.map((bullet) => (
           <li>{bullet}</li>

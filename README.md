@@ -19,6 +19,14 @@ npm run dev
 `npm run dev` inicia o servidor local em `127.0.0.1:4321`.
 Para expor na rede local, use `npm run dev:lan`.
 
+No Astro 7 o dev server roda em background (nao prende o terminal). Para controla-lo:
+
+```bash
+npx astro dev status   # ver se esta rodando
+npx astro dev logs     # acompanhar os logs
+npx astro dev stop     # parar
+```
+
 ## Build
 ```bash
 export SITE_URL=https://meusite.meudomínio
@@ -34,15 +42,20 @@ npm run prd
   Se precisar usar outra pasta, defina `diaryFolder` no projeto dentro de `content/projects.json`.
   Cada post pode usar frontmatter:
   - `title`: titulo do post
-  - `date`: data no formato `YYYY-MM-DD` (usada para ordenacao)
+  - `date`: usada para ordenacao e para o rotulo exibido. Formatos aceitos:
+    `YYYY-MM-DD` e `DD-MM-YYYY` (mostram dia), `YYYY-MM` e `MM-YYYY` (mostram so mes/ano).
+    Data ausente ou invalida cai para "Data nao informada" e vai para o fim da ordenacao.
   - `summary`: resumo curto opcional
-- `public/cv-kollinn.pdf` e links de contato sao placeholders (substitua pelos seus).
+- `content/personal.json` guarda `cvFile`: aponte para um arquivo dentro de `public/`
+  (ex.: `cv-kollinn.pdf`) para o botao "Baixar CV" aparecer. Vazio = botao oculto.
 
 ## Deploy no GitHub Pages (Astro)
+Este repositorio ainda **nao** tem o workflow de Pages. Para usar essa opcao:
 1. Configure `SITE_URL` no ambiente de deploy com seu dominio final.
 2. Ajuste `astro.config.mjs` se precisar de `base` diferente de `/`.
-3. No GitHub, ative Pages em **Settings > Pages** e selecione **GitHub Actions**.
-4. Faca push para `main`. O workflow `deploy.yml` vai publicar a pasta `dist`.
+3. Crie `.github/workflows/deploy.yml` com as actions oficiais
+   (`withastro/action` ou `actions/upload-pages-artifact` + `actions/deploy-pages`).
+4. No GitHub, ative Pages em **Settings > Pages** e selecione **GitHub Actions**.
 
 Se preferir outro provedor, o build gera um site estatico em `dist`.
 

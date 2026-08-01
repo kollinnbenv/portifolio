@@ -39,12 +39,51 @@ const projectDiaryEntries = [
   )
 ];
 
+// Aceita os formatos usados no frontmatter: YYYY-MM-DD, DD-MM-YYYY, YYYY-MM e MM-YYYY.
+// Retorna tambem a precisao, para nao inventar dia em data que so tem mes/ano.
 const toDate = (dateInput) => {
   if (typeof dateInput !== 'string' || !dateInput.trim()) return null;
-  const normalized = /^\d{4}-\d{2}-\d{2}$/.test(dateInput) ? `${dateInput}T00:00:00` : dateInput;
-  const parsed = new Date(normalized);
-  return Number.isNaN(parsed.getTime()) ? null : parsed;
+
+  const raw = dateInput.trim().replace(/\//g, '-');
+  let year;
+  let month;
+  let day = 1;
+  let precision = 'month';
+
+  let match = raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (match) {
+    [, year, month, day] = match;
+    precision = 'day';
+  } else if ((match = raw.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/))) {
+    [, day, month, year] = match;
+    precision = 'day';
+  } else if ((match = raw.match(/^(\d{4})-(\d{1,2})$/))) {
+    [, year, month] = match;
+  } else if ((match = raw.match(/^(\d{1,2})-(\d{4})$/))) {
+    [, month, year] = match;
+  } else {
+    return null;
+  }
+
+  const yearNumber = Number(year);
+  const monthNumber = Number(month);
+  const dayNumber = Number(day);
+
+  if (monthNumber < 1 || monthNumber > 12 || dayNumber < 1 || dayNumber > 31) return null;
+
+  const parsed = new Date(yearNumber, monthNumber - 1, dayNumber);
+  if (Number.isNaN(parsed.getTime()) || parsed.getMonth() !== monthNumber - 1) return null;
+
+  return { date: parsed, precision };
 };
+
+const formatDateLabel = ({ date, precision }) =>
+  date.toLocaleDateString(
+    'pt-BR',
+    precision === 'day'
+      ? { day: '2-digit', month: 'short', year: 'numeric' }
+      : { month: 'long', year: 'numeric' }
+  );
 
 const diaryPosts = (
   await Promise.all(
@@ -52,7 +91,7 @@ const diaryPosts = (
       .map(async ({ file, load }) => {
         const diaryEntry = await load();
         const frontmatter = diaryEntry.frontmatter ?? {};
-        const dateValue = toDate(frontmatter.date);
+        const parsedDate = toDate(frontmatter.date);
         const fileName = file.split('/').pop()?.replace(/\.md$/, '') ?? 'post';
         const fallbackTitle = fileName
           .replace(/^\d{4}-\d{2}-\d{2}-?/, '')
@@ -65,15 +104,19 @@ const diaryPosts = (
             ? frontmatter.title.trim()
             : fallbackTitle || 'Post',
           summary: typeof frontmatter.summary === 'string' ? frontmatter.summary.trim() : '',
-          dateSort: dateValue ? dateValue.getTime() : 0,
-          dateLabel: dateValue
-            ? dateValue.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
-            : 'Data nao informada',
+          dateSort: parsedDate ? parsedDate.date.getTime() : 0,
+          dateLabel: parsedDate ? formatDateLabel(parsedDate) : 'Data nao informada',
           Content: diaryEntry.Content
         };
       })
   )
-).sort((a, b) => b.dateSort - a.dateSort);
+).sort((a, b) => {
+  // Ordem cronologica crescente: fase 1 primeiro, ultima fase por ultimo.
+  // Entradas sem data valida ficam no fim; empate de data desempata pelo nome do arquivo.
+  if (Boolean(a.dateSort) !== Boolean(b.dateSort)) return a.dateSort ? -1 : 1;
+  if (a.dateSort !== b.dateSort) return a.dateSort - b.dateSort;
+  return a.slug.localeCompare(b.slug, 'pt-BR', { numeric: true });
+});
 
 if (!entryLoader && diaryPosts.length === 0) {
   throw new Error(`Conteudo nao encontrado para ${project.slug}`);
@@ -169,4 +212,34 @@ const tocItems = [
       </aside>
     ) : null}
   </section>
+
+  <script is:inline>
+    // Posts do diario ficam dentro de <details> fechado: abre o alvo antes de rolar ate ele.
+    const revealDiaryPost = (hash, shouldScroll) => {
+      if (!hash || hash.length < 2) return;
+
+      const post = document.getElementById(decodeURIComponent(hash.slice(1)));
+      if (!post) return;
+
+      const details = post.querySelector('details');
+      if (details) details.open = true;
+
+      if (shouldScroll) {
+        post.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      }
+    };
+
+    document.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const anchor = target.closest('a[href^="#"]');
+      if (!anchor) return;
+
+      revealDiaryPost(anchor.getAttribute('href'), false);
+    });
+
+    window.addEventListener('hashchange', () => revealDiaryPost(window.location.hash, true));
+    revealDiaryPost(window.location.hash, true);
+  </script>
 </BaseLayout>

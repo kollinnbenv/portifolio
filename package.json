@@ -15,7 +15,7 @@
     "prd": "npm run build && npm run start"
   },
   "dependencies": {
-    "astro": "^6.1.2",
+    "astro": "^7.1.6",
     "serve": "^14.2.6"
   }
 }
