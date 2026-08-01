@@ -1,4 +1,5 @@
 ---
+import { createCipheriv, pbkdf2Sync, randomBytes } from 'node:crypto';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Tag from '../../components/Tag.astro';
 import projects from '../../../content/projects.json';
@@ -15,6 +16,39 @@ const { project } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const repoUrl = getSafeExternalUrl(project.repoUrl);
 const demoUrl = getSafeExternalUrl(project.demoUrl);
+
+// Bloqueio do diario: o conteudo vai cifrado no HTML (AES-256-GCM) e so e decifrado
+// no navegador com a senha correta. Assim o dist estatico nao carrega o texto em claro.
+// DIARY_LOCK=false desativa o bloqueio e publica o diario aberto.
+const isDisabled = (value) =>
+  typeof value === 'string' && ['false', '0', 'off', 'no'].includes(value.trim().toLowerCase());
+
+const diaryLockEnabled = !isDisabled(import.meta.env.DIARY_LOCK);
+const diaryPassword = (import.meta.env.DIARY_PASSWORD ?? '').trim();
+
+if (diaryLockEnabled && !diaryPassword) {
+  throw new Error(
+    'DIARY_PASSWORD nao definida. Configure a senha do diario ou use DIARY_LOCK=false para publicar sem bloqueio.'
+  );
+}
+
+const KDF_ITERATIONS = 250_000;
+const diarySalt = diaryLockEnabled ? randomBytes(16) : null;
+const diaryKey = diaryLockEnabled
+  ? pbkdf2Sync(diaryPassword, diarySalt, KDF_ITERATIONS, 32, 'sha256')
+  : null;
+
+// Formato compativel com o WebCrypto do navegador: authTag concatenado ao fim do ciphertext.
+const encryptDiaryHtml = (html) => {
+  const iv = randomBytes(12);
+  const cipher = createCipheriv('aes-256-gcm', diaryKey, iv);
+  const encrypted = Buffer.concat([cipher.update(html, 'utf8'), cipher.final()]);
+
+  return {
+    iv: iv.toString('base64'),
+    payload: Buffer.concat([encrypted, cipher.getAuthTag()]).toString('base64')
+  };
+};
 
 const toMarkdownLoaders = (globResult) =>
   Object.entries(globResult).map(([file, load]) => ({ file, load }));
@@ -92,6 +126,15 @@ const diaryPosts = (
         const diaryEntry = await load();
         const frontmatter = diaryEntry.frontmatter ?? {};
         const parsedDate = toDate(frontmatter.date);
+
+        let cipher = null;
+        if (diaryLockEnabled) {
+          if (typeof diaryEntry.compiledContent !== 'function') {
+            throw new Error(`Nao foi possivel obter o HTML compilado de ${file} para cifrar o diario.`);
+          }
+          cipher = encryptDiaryHtml(await diaryEntry.compiledContent());
+        }
+
         const fileName = file.split('/').pop()?.replace(/\.md$/, '') ?? 'post';
         const fallbackTitle = fileName
           .replace(/^\d{4}-\d{2}-\d{2}-?/, '')
@@ -106,7 +149,8 @@ const diaryPosts = (
           summary: typeof frontmatter.summary === 'string' ? frontmatter.summary.trim() : '',
           dateSort: parsedDate ? parsedDate.date.getTime() : 0,
           dateLabel: parsedDate ? formatDateLabel(parsedDate) : 'Data nao informada',
-          Content: diaryEntry.Content
+          Content: diaryEntry.Content,
+          cipher
         };
       })
   )
@@ -173,6 +217,29 @@ const tocItems = [
       {diaryPosts.length ? (
         <section class="project-diary" aria-label="Diario do projeto">
           <h2>Diario do projeto</h2>
+          {diaryLockEnabled ? (
+            <form
+              class="project-diary-lock"
+              data-diary-lock
+              data-salt={diarySalt.toString('base64')}
+              data-iterations={KDF_ITERATIONS}
+            >
+              <label for="diary-password">
+                Os posts do diario sao privados. Informe a senha para liberar a leitura.
+              </label>
+              <div class="project-diary-lock-row">
+                <input
+                  id="diary-password"
+                  name="diary-password"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                />
+                <button class="button" type="submit">Liberar</button>
+              </div>
+              <p class="project-diary-lock-status" data-diary-status role="status" aria-live="polite"></p>
+            </form>
+          ) : null}
           <div class="project-diary-list">
             {diaryPosts.map((post) => {
               const PostContent = post.Content;
@@ -188,7 +255,18 @@ const tocItems = [
                       <span class="project-diary-indicator" aria-hidden="true"></span>
                     </summary>
                     <div class="project-diary-body">
-                      <PostContent />
+                      {post.cipher ? (
+                        <div
+                          class="project-diary-cipher"
+                          data-diary-cipher
+                          data-iv={post.cipher.iv}
+                          data-payload={post.cipher.payload}
+                        >
+                          <p>Conteudo protegido por senha.</p>
+                        </div>
+                      ) : (
+                        <PostContent />
+                      )}
                     </div>
                   </details>
                 </article>
@@ -241,5 +319,127 @@ const tocItems = [
 
     window.addEventListener('hashchange', () => revealDiaryPost(window.location.hash, true));
     revealDiaryPost(window.location.hash, true);
+  </script>
+
+  <script is:inline>
+    // Decifra o diario no navegador. A chave vem da senha via PBKDF2; nada dela fica no HTML.
+    (() => {
+      const lockForm = document.querySelector('[data-diary-lock]');
+      if (!lockForm) return;
+
+      const statusField = lockForm.querySelector('[data-diary-status]');
+      const passwordField = lockForm.querySelector('input[type="password"]');
+      const storageKey = 'diary-password';
+      const encoder = new TextEncoder();
+      const decoder = new TextDecoder();
+
+      const fromBase64 = (value) => Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
+
+      const setStatus = (message) => {
+        if (statusField) statusField.textContent = message;
+      };
+
+      const readStoredPassword = () => {
+        try {
+          return sessionStorage.getItem(storageKey);
+        } catch {
+          return null;
+        }
+      };
+
+      const storePassword = (password) => {
+        try {
+          sessionStorage.setItem(storageKey, password);
+        } catch {
+          // Sem sessionStorage a senha e pedida de novo na proxima pagina.
+        }
+      };
+
+      const forgetPassword = () => {
+        try {
+          sessionStorage.removeItem(storageKey);
+        } catch {
+          // Nada a fazer.
+        }
+      };
+
+      const deriveKey = async (password) => {
+        const material = await crypto.subtle.importKey(
+          'raw',
+          encoder.encode(password),
+          'PBKDF2',
+          false,
+          ['deriveKey']
+        );
+
+        return crypto.subtle.deriveKey(
+          {
+            name: 'PBKDF2',
+            salt: fromBase64(lockForm.dataset.salt),
+            iterations: Number(lockForm.dataset.iterations),
+            hash: 'SHA-256'
+          },
+          material,
+          { name: 'AES-GCM', length: 256 },
+          false,
+          ['decrypt']
+        );
+      };
+
+      // Decifra tudo antes de escrever no DOM: senha errada falha sem deixar post pela metade.
+      const unlock = async (password) => {
+        const targets = Array.from(document.querySelectorAll('[data-diary-cipher]'));
+        if (!targets.length) return;
+
+        const key = await deriveKey(password);
+        const revealed = [];
+
+        for (const target of targets) {
+          const plain = await crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv: fromBase64(target.dataset.iv) },
+            key,
+            fromBase64(target.dataset.payload)
+          );
+          revealed.push([target, decoder.decode(plain)]);
+        }
+
+        for (const [target, html] of revealed) {
+          target.innerHTML = html;
+          target.classList.remove('project-diary-cipher');
+          target.removeAttribute('data-diary-cipher');
+          target.removeAttribute('data-iv');
+          target.removeAttribute('data-payload');
+        }
+
+        lockForm.hidden = true;
+      };
+
+      lockForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        if (!window.crypto?.subtle) {
+          setStatus('Este navegador precisa de HTTPS (ou localhost) para liberar o diario.');
+          return;
+        }
+
+        const password = passwordField?.value ?? '';
+        if (!password) return;
+
+        setStatus('Verificando...');
+
+        try {
+          await unlock(password);
+          storePassword(password);
+        } catch {
+          setStatus('Senha incorreta.');
+          passwordField?.select();
+        }
+      });
+
+      const storedPassword = readStoredPassword();
+      if (storedPassword && window.crypto?.subtle) {
+        unlock(storedPassword).catch(forgetPassword);
+      }
+    })();
   </script>
 </BaseLayout>

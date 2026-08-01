@@ -1,7 +1,7 @@
 ---
-title: "fase 03"
+title: "Fase 3 · GitOps e template"
 date: "03-2026"
-summary: "GitOps, padronização e template reutilizável"
+summary: "Por que o time declara o autoscaling e a plataforma controla o template"
 ---
 # Fase 3 - Padronização GitOps e template
 
@@ -36,9 +36,10 @@ Eu fui pelo meio termo, o time declara mas dentro de um template que a plataform
 
 Criei o template do ScaledObject na nossa biblioteca interna de charts Helm. O time preenche alguns valores e herda o resto pronto:
 
-* pollingInterval e cooldownPeriod com valores conservadores por padrão
-* Piso e teto de réplicas sempre explícitos
-* Janela de estabilização na redução, para evitar flapping
+* Consulta ao gatilho a cada 30 segundos e espera de 300 segundos antes de reduzir réplica
+* Piso e teto de réplicas sempre explícitos, com 2 e 5 como padrão
+* Janela de estabilização de 300 segundos na redução, para evitar flapping
+* Limiar de 70 por cento para cpu e 80 por cento para memória, quando o gatilho é de utilização
 * Suporte a `paused`, que permite congelar o autoscaling durante troubleshooting ou incidente sem remover a configuração
 * fallback disponível, com a ressalva de que só se aplica a gatilho externo
 

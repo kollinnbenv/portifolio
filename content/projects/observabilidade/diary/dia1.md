@@ -1,7 +1,7 @@
 ---
 title: "Dashboard APIM"
 date: "25-03-2026"
-summary: "Observabilidade com APIM Azure Logs Analytics"
+summary: "Saber em minutos se o gargalo é da API ou do gateway"
 ---
 
 # 

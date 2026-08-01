@@ -1,7 +1,7 @@
 ---
-title: "fase 04"
+title: "Fase 4 · Subida em DEV e documentação"
 date: "04-2026"
-summary: "Subida em DEV e documentação para os times"
+summary: "Carga em rajada quebrou a calibragem que o laboratório tinha validado"
 ---
 # Fase 4 - Subida no ambiente de dev e documentação
 
@@ -27,7 +27,7 @@ Depois do piloto validado eu atualizei o boilerplate de novos serviços para já
 
 # A documentação
 
-Componente de plataforma que precisa do autor por perto não é componente, vira dependência. Escrevi a documentação na wiki interna deixando a premissa explícita logo na abertura, que o time não precisa conhecer a implementação interna do template, só precisa saber quais campos preencher e o comportamento esperado.
+Escrevi a documentação na wiki interna deixando a premissa explícita logo na abertura, que o time não precisa conhecer a implementação interna do template, só precisa saber quais campos preencher e o comportamento esperado.
 
 A estrutura ficou assim:
 
@@ -45,7 +45,7 @@ A seção de erros comuns foi a que eu mais quis escrever, porque são erros que
 * Esquecer a credencial do service bus, deixando o gatilho sem conseguir consultar a fila
 * Repetir o nome de um gatilho quando existe mais de um
 
-Documentar o erro que eu cometi é mais útil do que documentar o caminho feliz, porque o caminho feliz a pessoa descobre sozinha e o erro é onde ela fica bloqueada e abre chamado.
+Foram os cinco pontos que mais me travaram durante os testes, e por isso entraram na documentação.
 
 # Finalização dessa fase
 

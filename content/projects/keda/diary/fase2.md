@@ -1,7 +1,7 @@
 ---
-title: "fase 02"
+title: "Fase 2 · Autoscaling no laboratório"
 date: "01-2026"
-summary: "Laboratório com controle de risco"
+summary: "Quatro tipos de gatilho testados, e por que cron resolve pico previsível"
 ---
 # Fase 2 - Testando o autoscaling no laboratório
 
@@ -32,11 +32,13 @@ Também testei os dois tipos de objeto, que é fácil confundir:
 * **ScaledObject:** ajusta réplicas de um Deployment de longa duração
 * **ScaledJob:** dispara execuções pontuais de trabalho, com controle de histórico de jobs concluídos e falhos
 
-No teste de ScaledJob eu deixei os workers com tolerância para nós spot, que custam bem menos que o sob demanda. Trabalho em lote tolera interrupção, então é a carga que deve rodar em nó barato, e isso é decisão de custo.
+No teste de ScaledJob eu disparei 10 jobs por acionamento, com teto de 50 execuções simultâneas, e deixei os workers com tolerância para nós spot, que custam bem menos que o sob demanda. Trabalho em lote tolera interrupção, então é a carga que deve rodar em nó barato, e isso é decisão de custo.
 
 # Scale to zero
 
-Com gatilho de horário eu validei escalonamento até zero réplica fora da janela de uso. Em ambiente não produtivo, que fica ocioso à noite e no fim de semana, isso é redução direta de consumo.
+Com gatilho de horário eu validei escalonamento de zero a três réplicas, com janela das 8h às 20h de segunda a sexta. Fora dessa janela a aplicação fica em zero.
+
+Em ambiente não produtivo isso é redução direta de consumo, porque a janela ociosa é maior que a de uso. São 12 horas de pé contra 12 horas parado nos dias úteis, e o fim de semana inteiro em zero.
 
 A limitação que eu descobri testando é que cpu e memória sozinhos não escalam para zero, precisa ter pelo menos um gatilho de outro tipo junto. Não está óbvio na documentação e só aparece quando você tenta.
 

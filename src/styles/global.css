@@ -445,6 +445,47 @@ main {
   font-size: clamp(1.35rem, 2vw, 1.6rem);
 }
 
+.project-diary-lock {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--surface);
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--border) 15%, transparent);
+}
+
+.project-diary-lock label {
+  font-size: 0.95rem;
+}
+
+.project-diary-lock-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.project-diary-lock input {
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--border) 35%, transparent);
+}
+
+.project-diary-lock-status {
+  margin: 0;
+  min-height: 1.2em;
+  font-size: 0.85rem;
+}
+
+.project-diary-cipher {
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
 .project-diary-list {
   display: grid;
   gap: 1rem;

@@ -9,6 +9,32 @@ Aplicação em Astro
 ## Variaveis de ambiente
 - Configure `SITE_URL` com o dominio canonico do site.
 - Opcional: `GOOGLE_SITE_VERIFICATION` para a meta tag de verificacao do Search Console.
+- `DIARY_PASSWORD`: senha que libera os posts do diario. Obrigatoria enquanto o bloqueio estiver ativo.
+- `DIARY_LOCK`: `false` (ou `0`/`off`/`no`) desativa o bloqueio e publica o diario aberto.
+  Qualquer outro valor, ou a variavel ausente, mantem o bloqueio ligado.
+
+### Diario protegido por senha
+Os posts do diario sao cifrados em build (AES-256-GCM, chave derivada da senha com
+PBKDF2-SHA256 / 250k iteracoes) e so sao decifrados no navegador quando a senha certa e
+informada. O `dist` publicado nao contem o texto dos posts em claro, entao a protecao vale
+tambem para acesso direto a URL e para view-source.
+
+Fica visivel mesmo com o bloqueio ligado: titulo, data e resumo de cada post (usados no
+indice lateral). Nao coloque nada sensivel nesses campos do frontmatter.
+
+Detalhes praticos:
+- A senha fica no `sessionStorage` durante a visita, para nao ser pedida a cada projeto.
+- Trocar a senha exige um novo build (o conteudo e cifrado em build time).
+- O navegador precisa de contexto seguro (HTTPS ou `localhost`) para usar o WebCrypto.
+  Por isso `npm run dev:lan` acessado por IP na rede local nao consegue liberar o diario.
+
+```bash
+export DIARY_PASSWORD='sua-senha'
+npm run build
+
+# ou, para publicar o diario sem bloqueio:
+DIARY_LOCK=false npm run build
+```
 ## Como rodar
 ```bash
 npm install

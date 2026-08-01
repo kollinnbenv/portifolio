@@ -1,7 +1,7 @@
 ---
-title: "fase 01"
+title: "Fase 1 · Estudo e validações"
 date: "12-2025"
-summary: "Estudos e validações"
+summary: "Por que o KEDA servia para além do cliente que reclamou"
 ---
 # Fase 1 - Estudo e validações 
 
